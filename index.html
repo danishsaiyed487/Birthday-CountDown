@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Birthday Countdown</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #171b42, #563c83, #a45c91);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 25px;
+            padding: 40px 25px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .cake {
+            font-size: 65px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #eee2ff;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, 0.16);
+            padding: 25px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .box h2 {
+            font-size: 40px;
+            color: #ffd76a;
+            margin-bottom: 8px;
+        }
+
+        .box p {
+            font-size: 14px;
+            color: #f1e9ff;
+        }
+
+        .message {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffe08a;
+            margin-top: 25px;
+            line-height: 1.5;
+        }
+
+
+        @media (max-width: 550px) {
+
+            .container {
+                padding: 30px 15px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .box h2 {
+                font-size: 32px;
+            }
+
+            .cake {
+                font-size: 50px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="cake">🎂</div>
+
+        <h1>Birthday Countdown</h1>
+
+        <p class="subtitle">
+            Let's make your special day unforgettable!
+        </p>
+
+        <div class="input-group">
+
+            <label for="name">Birthday Person's Name</label>
+
+            <input type="text" id="name"
+                placeholder="Enter your name">
+
+        </div>
+
+        <div class="input-group">
+
+            <label for="birthday">Select Birthday Date</label>
+
+            <input type="date" id="birthday" required>
+
+        </div>
+
+        <div class="countdown">
+
+            <div class="box">
+                <h2 id="days">00</h2>
+                <p>Days</p>
+            </div>
+
+            <div class="box">
+                <h2 id="hours">00</h2>
+                <p>Hours</p>
+            </div>
+
+            <div class="box">
+                <h2 id="minutes">00</h2>
+                <p>Minutes</p>
+            </div>
+
+            <div class="box">
+                <h2 id="seconds">00</h2>
+                <p>Seconds</p>
+            </div>
+
+        </div>
+
+        <div class="message" id="message">
+            Your special day is waiting! 🎉
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+        function updateCountdown() {
+
+            let birthdayInput =
+                document.getElementById("birthday").value;
+
+            let name =
+                document.getElementById("name").value.trim();
+
+            if (birthdayInput === "") {
+
+                document.getElementById("message").innerHTML =
+                    "Please select your birthday date! 🎂";
+
+                return;
+            }
+
+            // Get selected birthday
+            let parts = birthdayInput.split("-");
+
+            let birthMonth = Number(parts[1]) - 1;
+            let birthDay = Number(parts[2]);
+
+            // Get current date and time
+            let now = new Date();
+
+            // Set birthday in current year
+            let targetDate = new Date(
+                now.getFullYear(),
+                birthMonth,
+                birthDay
+            );
+
+            // Check whether birthday has passed
+            if (targetDate < new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            )) {
+
+                targetDate = new Date(
+                    now.getFullYear() + 1,
+                    birthMonth,
+                    birthDay
+                );
+
+            }
+
+            // Calculate remaining time
+            let difference = targetDate.getTime() - now.getTime();
+
+            // Check birthday
+            if (
+                now.getMonth() === birthMonth &&
+                now.getDate() === birthDay
+            ) {
+
+                document.getElementById("days").innerHTML = "00";
+                document.getElementById("hours").innerHTML = "00";
+                document.getElementById("minutes").innerHTML = "00";
+                document.getElementById("seconds").innerHTML = "00";
+
+                document.getElementById("message").innerHTML =
+                    "🎉 Happy Birthday " +
+                    (name || "Dear Friend") +
+                    "! 🎂🥳";
+
+                return;
+            }
+
+            // Calculate days, hours, minutes and seconds
+            let days = Math.floor(
+                difference / (1000 * 60 * 60 * 24)
+            );
+
+            let hours = Math.floor(
+                (difference / (1000 * 60 * 60)) % 24
+            );
+
+            let minutes = Math.floor(
+                (difference / (1000 * 60)) % 60
+            );
+
+            let seconds = Math.floor(
+                (difference / 1000) % 60
+            );
+
+            // Display countdown
+            document.getElementById("days").innerHTML = days;
+            document.getElementById("hours").innerHTML =
+                String(hours).padStart(2, "0");
+
+            document.getElementById("minutes").innerHTML =
+                String(minutes).padStart(2, "0");
+
+            document.getElementById("seconds").innerHTML =
+                String(seconds).padStart(2, "0");
+
+            document.getElementById("message").innerHTML =
+                "Waiting for your special day, " +
+                (name || "Dear Friend") + "! 💜";
+
+        }
+
+        // Update countdown every second
+        updateCountdown();
+
+        setInterval(updateCountdown, 1000);
+
+        // Update when birthday date changes
+        document.getElementById("birthday").addEventListener(
+            "change", updateCountdown
+        );
+
+        // Update when name changes
+        document.getElementById("name").addEventListener(
+            "input", updateCountdown
+        );
+
+    </script>
+
+</body>
+
+</html>
